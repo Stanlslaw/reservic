@@ -1,0 +1,13 @@
+tunnel: 27e91637-95e3-453d-949f-83d26500b662
+credentials-file: /etc/cloudflared/credentials.json
+ingress:
+  - hostname: app.reservic.ru
+    service: http://client:3000
+
+  - hostname: provider.reservic.ru
+    service: http://provider_client:3001
+
+  - hostname: api.reservic.ru
+    service: http://api:3002
+
+  - service: http_status:404
