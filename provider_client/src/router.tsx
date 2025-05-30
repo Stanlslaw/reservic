@@ -1,10 +1,14 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, redirect } from 'react-router';
 import { Root } from './Root.tsx';
-import { Home } from './features/home/pages/Home.tsx';
 import { TabBarLayout } from './components/layouts/TabBarLayout.tsx';
 import { More } from './features/more/pages/More.tsx';
-import { Profile } from './features/profile/pages/Profile.tsx';
 import { OutsideScreen } from './components/layouts/OutsideScreen.tsx';
+import { ProviderProfile } from './features/providerProfile/pages/ProviderProfile.tsx';
+import { Services } from './features/services/pages/Services.tsx';
+import { CreateService } from './features/services/pages/CreateService.tsx';
+import { EditService } from './features/services/pages/EditService.tsx';
+import { Service } from './features/common/Service.tsx';
+import { CreateProviderProfile } from './features/providerProfile/pages/CreateProviderProfile.tsx';
 
 export const router = createBrowserRouter([
   {
@@ -14,23 +18,44 @@ export const router = createBrowserRouter([
       {
         Component: TabBarLayout,
         children: [
-          { index: true, Component: Home },
-          { path: 'catalog', Component: null },
           {
-            path: 'appointments',
-            Component: null,
+            index: true,
+            loader: () => redirect('services'),
+          },
+          {
+            path: 'services',
             children: [
-              { path: 'history', Component: null },
               {
-                path: 'upcoming',
-                Component: null,
-                children: [{ path: 'appointment', Component: null }],
+                index: true,
+                Component: Services,
+              },
+              {
+                Component: OutsideScreen,
+                children: [
+                  {
+                    path: 'create',
+                    Component: CreateService,
+                  },
+                  {
+                    path: 'edit',
+                    Component: EditService,
+                  },
+                  {
+                    path: 'service',
+                    Component: Service,
+                  },
+                ],
               },
             ],
           },
-          { path: 'favorites', Component: null },
+          {
+            path: 'appointments',
+            Component: null,
+          },
+          { path: 'history', Component: null },
           {
             path: 'more',
+
             children: [
               {
                 index: true,
@@ -38,16 +63,15 @@ export const router = createBrowserRouter([
               },
               {
                 Component: OutsideScreen,
-                children: [
-                  {
-                    path: 'profile',
-                    Component: Profile,
-                  },
-                ],
+                children: [{ path: 'profile', Component: ProviderProfile }],
               },
             ],
           },
         ],
+      },
+      {
+        path: 'registration',
+        Component: CreateProviderProfile,
       },
     ],
   },

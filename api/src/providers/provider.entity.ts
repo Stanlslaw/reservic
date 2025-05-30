@@ -1,26 +1,33 @@
-import { IsOptional, IsString } from 'class-validator';
 import { Service } from 'src/services/service.entity';
-import { User } from 'src/users/user.entity';
+
 import {
   Column,
   CreateDateColumn,
   Entity,
   OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 export class Provider {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({ unique: true })
   id: number;
+
+  @Column({ nullable: true })
+  name: string;
+
+  @Column()
+  username: string;
+
+  @Column({ nullable: true })
+  phone_number?: string;
 
   @Column({ nullable: true })
   address?: string;
 
   @Column({ nullable: true })
-  header_picture_url?: string;
+  picture_url?: string;
 
   @Column({ nullable: true })
   description?: string;
@@ -28,40 +35,9 @@ export class Provider {
   @OneToMany(() => Service, (service) => service.provider)
   services: Service[];
 
-  @OneToOne(() => User, (user) => user.provider)
-  user: User;
-
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-}
-
-export class CreateProviderDto {
-  @IsOptional()
-  @IsString()
-  address?: string;
-
-  @IsOptional()
-  @IsString()
-  header_picture_url?: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-}
-
-export class UpdateProviderDto {
-  @IsOptional()
-  @IsString()
-  address?: string;
-
-  @IsOptional()
-  @IsString()
-  header_picture_url?: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
 }

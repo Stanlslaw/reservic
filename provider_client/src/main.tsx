@@ -9,6 +9,7 @@ import {
   backButton,
   init,
   initData,
+  mainButton,
   miniApp,
   viewport,
 } from '@telegram-apps/sdk-react';
@@ -18,6 +19,8 @@ miniApp.mountSync();
 initData.restore();
 viewport.mount();
 backButton.mount();
+viewport.expand();
+mainButton.mount();
 eruda.init();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

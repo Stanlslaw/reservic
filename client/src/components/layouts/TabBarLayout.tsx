@@ -20,25 +20,25 @@ const TAB_BARS_ITEMS: TAB_BAR_ITEM[] = [
   {
     id: 'catalog',
     path: '/catalog',
-    text: 'Catalog',
+    text: 'Каталог',
     Icon: AiOutlineAppstore,
   },
   {
     id: 'appointments',
     path: '/appointments',
-    text: 'Appointments',
+    text: 'Услуги',
     Icon: MdOutlineBookmarks,
   },
   {
     id: 'favorites',
     path: '/favorites',
-    text: 'Favorites',
+    text: 'Любимые',
     Icon: IoIosHeartEmpty,
   },
   {
     id: 'more',
     path: '/more',
-    text: 'More',
+    text: 'Дополнительно',
     Icon: IoIosMenu,
   },
 ] as const;

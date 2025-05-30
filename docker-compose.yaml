@@ -1,4 +1,3 @@
-version: "3.8"
 name: reservic
 
 services:
@@ -15,7 +14,6 @@ services:
     depends_on:
       - api
     volumes:
-      - ./shared:/shared
       - ./client:/app
       - /app/node_modules
 
@@ -32,7 +30,6 @@ services:
     depends_on:
       - api
     volumes:
-      - ./shared:/shared
       - ./provider_client:/app
       - /app/node_modules
 
@@ -46,7 +43,6 @@ services:
       database:
         condition: service_healthy
     volumes:
-      - ./shared:/shared
       - ./api:/app
       - /app/node_modules
     environment:

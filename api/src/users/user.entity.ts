@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { UserFavorite } from '../favorites/favorite.entity';
 import { ServiceReview } from 'src/reviews/review.entity';
-import { Provider } from 'src/providers/provider.entity';
+
 import { Booking } from 'src/bookings/booking.entity';
 
 @Entity()
@@ -37,9 +37,6 @@ export class User {
 
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];
-
-  @OneToOne(() => Provider, (provider) => provider.user)
-  provider: Provider;
 
   @OneToMany(() => UserFavorite, (favorite) => favorite.user)
   favorites: UserFavorite[];
