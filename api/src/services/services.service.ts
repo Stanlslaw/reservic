@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  Service,
-  DeleteServiceDto,
   CreateServiceDto,
+  DeleteServiceDto,
+  Service,
   UpdateServiceDto,
 } from './service.entity';
 import { Repository } from 'typeorm';
@@ -32,7 +32,9 @@ export class ServicesService {
       );
     }
 
-    return this.serviceRepository.save(serviceData);
+    // const newService = this.serviceRepository.create(serviceData);
+
+    // return this.serviceRepository.save(newService);
   }
 
   async updateService(serviceId: number, serviceData: UpdateServiceDto) {

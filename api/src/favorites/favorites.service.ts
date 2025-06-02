@@ -43,11 +43,10 @@ export class FavoritesService {
     return await this.usersFavoriteRepository.save(favorite);
   }
 
-  async removeFavorite(userId: number, serviceId: number) {
+  async removeFavorite(favoriteId: number) {
     const favorite = await this.usersFavoriteRepository.findOne({
       where: {
-        user: { id: userId },
-        service: { id: serviceId },
+        id: favoriteId,
       },
     });
 

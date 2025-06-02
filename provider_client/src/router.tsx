@@ -9,14 +9,17 @@ import { CreateService } from './features/services/pages/CreateService.tsx';
 import { EditService } from './features/services/pages/EditService.tsx';
 import { Service } from './features/common/Service.tsx';
 import { CreateProviderProfile } from './features/providerProfile/pages/CreateProviderProfile.tsx';
+import { ErrorBoundary } from './features/error/pages/Error.tsx';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     Component: Root,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         Component: TabBarLayout,
+
         children: [
           {
             index: true,

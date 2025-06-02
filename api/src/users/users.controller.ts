@@ -13,10 +13,9 @@ import { InitData } from '@telegram-apps/init-data-node';
 import { User } from './user.entity';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { ReviewsService } from 'src/reviews/reviews.service';
-import { CreateReviewDto } from 'src/reviews/review.entity';
 import {
-  AddFavoriteDto,
-  RemoveFavoriteDto,
+  CreateUserFavoriteDto,
+  DeleteUserFavoriteDto,
 } from 'src/favorites/favorite.entity';
 
 @Controller('user')
@@ -77,7 +76,10 @@ export class UsersController {
   }
 
   @Post(':id/favorites/add')
-  async addFavorite(@Param('id') id: number, @Body() body: AddFavoriteDto) {
+  async addFavorite(
+    @Param('id') id: number,
+    @Body() body: CreateUserFavoriteDto,
+  ) {
     try {
       return await this.favoriteService.addFavorite(+id, body.serviceId);
     } catch (err) {
@@ -89,10 +91,10 @@ export class UsersController {
   @Post(':id/favorites/remove')
   async removeFavorite(
     @Param('id') id: number,
-    @Body() body: RemoveFavoriteDto,
+    @Body() body: DeleteUserFavoriteDto,
   ) {
     try {
-      return await this.favoriteService.removeFavorite(+id, body.serviceId);
+      return await this.favoriteService.removeFavorite(body.id);
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException();

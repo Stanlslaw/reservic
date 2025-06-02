@@ -11,6 +11,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { ApiProperty, OmitType } from '@nestjs/swagger';
+
 @Entity()
 export class ServiceReview {
   @PrimaryGeneratedColumn()
@@ -37,16 +39,39 @@ export class ServiceReview {
   updatedAt: Date;
 }
 
-export class CreateReviewDto {
+export class ServiceReviewDto {
+  @ApiProperty()
+  @IsOptional()
   @IsInt()
-  serviceId: number;
+  id?: number;
 
+  @ApiProperty()
   @IsOptional()
   @IsString()
   text?: string;
 
+  @ApiProperty()
+  @IsOptional()
   @IsInt()
-  @Min(1)
-  @Max(5)
-  value: number;
+  value?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  serviceId?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsInt()
+  userId?: number;
+
+  @ApiProperty()
+  @IsOptional()
+  createdAt?: Date;
+
+  @ApiProperty()
+  @IsOptional()
+  updatedAt?: Date;
 }
+
+export class CreateReviewDto extends OmitType(ServiceReviewDto, ['id']) {}

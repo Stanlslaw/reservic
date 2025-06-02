@@ -10,6 +10,7 @@ import {
 import { User } from '../users/user.entity';
 import { Service } from 'src/services/service.entity';
 import { IsInt } from 'class-validator';
+import { ApiProperty, OmitType, PickType } from '@nestjs/swagger';
 
 @Entity()
 export class UserFavorite {
@@ -31,12 +32,20 @@ export class UserFavorite {
   updatedAt: Date;
 }
 
-export class AddFavoriteDto {
+export class UserFavoriteDto {
+  @ApiProperty({ example: 1 })
+  @IsInt()
+  id: number;
+
+  @ApiProperty({ example: 5 })
   @IsInt()
   serviceId: number;
+
+  @ApiProperty({ example: 2 })
+  @IsInt()
+  userId: number;
 }
 
-export class RemoveFavoriteDto {
-  @IsInt()
-  serviceId: number;
-}
+export class CreateUserFavoriteDto extends OmitType(UserFavoriteDto, ['id']) {}
+
+export class DeleteUserFavoriteDto extends PickType(UserFavoriteDto, ['id']) {}

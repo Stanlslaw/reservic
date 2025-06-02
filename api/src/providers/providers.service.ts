@@ -1,8 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Provider } from './provider.entity';
+import {
+  CreateProviderDto,
+  Provider,
+  ProviderDto,
+  UpdateProviderDto,
+} from './provider.entity';
 import { Repository } from 'typeorm';
-import { ProviderDto } from 'src/dto/provider';
+import { Update } from 'telegraf/typings/core/types/typegram';
 
 @Injectable()
 export class ProvidersService {
@@ -15,17 +20,19 @@ export class ProvidersService {
     return await this.providerRepository.findOne({ where: { id: providerId } });
   }
 
-  async createProvider(providerData: ProviderDto) {
+  async createProvider(providerData: CreateProviderDto) {
     return this.providerRepository.save(providerData);
   }
 
-  async updateProvider(providerId: number, providerData: ProviderDto) {
+  async updateProvider(providerData: UpdateProviderDto) {
     const provider = await this.providerRepository.findOne({
-      where: { id: providerId },
+      where: { id: providerData.id },
     });
 
     if (!provider) {
-      throw new NotFoundException(`Service with id ${providerId} not found`);
+      throw new NotFoundException(
+        `Service with id ${providerData.id} not found`,
+      );
     }
 
     Object.assign(provider, providerData);

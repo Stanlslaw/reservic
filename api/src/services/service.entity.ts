@@ -1,4 +1,5 @@
-import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { OmitType, PartialType, PickType } from '@nestjs/swagger';
+import { IsArray, IsInt, IsNumber, IsString } from 'class-validator';
 import { Booking } from 'src/bookings/booking.entity';
 import { Provider } from 'src/providers/provider.entity';
 import { ServiceReview } from 'src/reviews/review.entity';
@@ -21,8 +22,8 @@ export class Service {
   @Column()
   title: string;
 
-  @Column()
-  photo_url: string;
+  @Column('text', { array: true })
+  photo_urls: string[];
 
   @Column()
   duration: string;
@@ -34,7 +35,10 @@ export class Service {
   price: string;
 
   @Column()
-  status: 'active' | 'hidden';
+  status: 'active' | 'deleted' | 'stopped';
+
+  @Column('text', { array: true })
+  days_of_week: string[];
 
   @Column()
   category: string;
@@ -56,76 +60,44 @@ export class Service {
   updatedAt: Date;
 }
 
-export class CreateServiceDto {
-  @IsString()
-  @IsNotEmpty()
-  title: string;
-
-  @IsString()
-  @IsNotEmpty()
-  photo_url: string;
-
-  @IsString()
-  @IsNotEmpty()
-  duration: string;
-
-  @IsString()
-  @IsNotEmpty()
-  description: string;
-
-  @IsString()
-  @IsNotEmpty()
-  price: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(['active', 'hidden'])
-  status: 'active' | 'hidden';
-
-  @IsString()
-  @IsNotEmpty()
-  category: string;
-}
-
-export class UpdateServiceDto {
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  title: string;
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  photo_url: string;
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  duration: string;
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  description: string;
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  price: string;
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(['active', 'hidden'])
-  status: 'active' | 'hidden';
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  category: string;
-}
-
-export class DeleteServiceDto {
+export class ServiceDto {
   @IsInt()
   id: number;
+  @IsInt()
+  providerId: number;
+  @IsString()
+  title: string;
+  @IsArray()
+  photo_urls: string[];
+  @IsString()
+  duration: number;
+  @IsInt()
+  start_time: number;
+  @IsInt()
+  end_time: number;
+  @IsString()
+  category: string;
+  @IsArray()
+  days_of_week: string[];
+  @IsString()
+  description: string;
+  @IsNumber()
+  price: number;
+  @IsString()
+  status: 'active' | 'deleted' | 'stopped';
 }
+
+export class CreateServiceDto extends OmitType(ServiceDto, ['id'] as const) {}
+
+export class UpdateServiceDto extends PartialType(ServiceDto) {
+  @IsInt()
+  id: number;
+
+  @IsInt()
+  providerId: number;
+}
+
+export class DeleteServiceDto extends PickType(ServiceDto, [
+  'id',
+  'providerId',
+] as const) {}

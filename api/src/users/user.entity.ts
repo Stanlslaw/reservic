@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -11,6 +10,8 @@ import { UserFavorite } from '../favorites/favorite.entity';
 import { ServiceReview } from 'src/reviews/review.entity';
 
 import { Booking } from 'src/bookings/booking.entity';
+import { IsInt, IsOptional, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
 
 @Entity()
 export class User {
@@ -18,10 +19,10 @@ export class User {
   id: number;
 
   @Column()
-  first_name: string;
+  first_name?: string;
 
   @Column()
-  last_name: string;
+  last_name?: string;
 
   @Column({ nullable: true })
   username?: string;
@@ -31,9 +32,6 @@ export class User {
 
   @Column({ nullable: true })
   phone_number?: string;
-
-  @Column({ default: false })
-  is_premium: boolean;
 
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];
@@ -49,4 +47,36 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+}
+
+export class UserDto {
+  @IsInt()
+  id: number;
+
+  @IsOptional()
+  @IsString()
+  first_name?: string;
+
+  @IsOptional()
+  @IsString()
+  last_name?: string;
+
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @IsOptional()
+  @IsString()
+  photo_url?: string;
+
+  @IsOptional()
+  @IsString()
+  phone_number?: string;
+}
+
+export class CreateUserDto extends UserDto {}
+
+export class UpdateUserDto extends PartialType(UserDto) {
+  @IsInt()
+  id: number;
 }

@@ -8,6 +8,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('API Docs')
+    .setDescription('Reservic bots api')
     .setVersion('1.0')
     .build();
 
