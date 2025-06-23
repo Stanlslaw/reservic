@@ -4,13 +4,7 @@ import {
   useSignal,
   viewport,
 } from '@telegram-apps/sdk-react';
-import {
-  Avatar,
-  Cell,
-  List,
-  Section,
-  Switch,
-} from '@telegram-apps/telegram-ui';
+import { Avatar, Cell, List, Section, Switch, Title } from 'tmaui';
 import { IoChevronForward } from 'react-icons/io5';
 import { useNavigate } from 'react-router';
 import { useGetUserQuery } from '../../../api/usersApi';
@@ -53,14 +47,12 @@ export const More = () => {
     navigate({ pathname: '/more/profile' });
   };
 
-  console.log(user);
+  console.log('data', user);
 
   return (
     <List>
-      <Section
-        header="Профиль"
-        footer="Тут можно посмотреть и отредактировать свою личную информацию"
-      >
+      <Title>Дополнительные возможности</Title>
+      <Section header="Профиль">
         <Cell
           subtitle={user?.username}
           before={<Avatar size={48} src={user?.photo_url} />}
@@ -70,20 +62,14 @@ export const More = () => {
           {user?.first_name + ' ' + user?.last_name}
         </Cell>
       </Section>
-      <Section
-        header="Настройки"
-        footer="Дополнительные возможности настроить приложение"
-      >
+      <Section header="Настройки">
         <Cell
           after={<Switch checked={isFullscreen} onChange={handleFullSize} />}
         >
           Полный экран
         </Cell>
       </Section>
-      <Section
-        header={'Дополнительно'}
-        footer="Дополнительные возможности приложения"
-      >
+      <Section header={'Дополнительно'}>
         {MORE_ACTIONS.map(({ text, action }, index) => (
           <Cell
             key={`more-item-${index}`}

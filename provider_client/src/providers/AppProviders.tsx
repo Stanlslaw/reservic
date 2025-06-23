@@ -1,4 +1,4 @@
-import { AppRoot } from '@telegram-apps/telegram-ui';
+import { AppRoot } from 'tmaui';
 import { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
 import { store } from '../store/store.ts';

@@ -7,12 +7,17 @@ import { OutsideScreen } from './components/layouts/OutsideScreen.tsx';
 import { Catalog } from './features/catalog/pages/Catalog.tsx';
 import { Appointments } from './features/appointments/pages/Appointments.tsx';
 import { Favorites } from './features/favorites/pages/Favorites.tsx';
+import { ErrorBoundary } from './features/error/pages/Error.tsx';
+import { Booking } from './features/common/Booking.tsx';
+import { Service } from './features/common/Service.tsx';
+import { CreateBooking } from './features/bookings/pages/CreateBooking.tsx';
+import { ProviderProfile } from './features/pages/ProviderProfile.tsx';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     Component: Root,
-
+    errorElement: <ErrorBoundary />,
     children: [
       {
         Component: TabBarLayout,
@@ -25,14 +30,6 @@ export const router = createBrowserRouter([
           {
             path: 'appointments',
             Component: Appointments,
-            children: [
-              { path: 'history', Component: null },
-              {
-                path: 'upcoming',
-                Component: null,
-                children: [{ path: 'appointment', Component: null }],
-              },
-            ],
           },
           { path: 'favorites', Component: Favorites },
           {
@@ -50,6 +47,46 @@ export const router = createBrowserRouter([
                     Component: Profile,
                   },
                 ],
+              },
+            ],
+          },
+          {
+            path: 'service',
+            Component: OutsideScreen,
+            children: [
+              {
+                path: ':serviceId',
+                element: <Service />,
+              },
+            ],
+          },
+          {
+            path: 'bookings',
+            Component: OutsideScreen,
+            children: [
+              {
+                path: ':id',
+                Component: Booking,
+              },
+            ],
+          },
+          {
+            path: 'provider',
+            Component: OutsideScreen,
+            children: [
+              {
+                path: ':providerId',
+                Component: ProviderProfile,
+              },
+            ],
+          },
+          {
+            path: 'createbooking',
+            Component: OutsideScreen,
+            children: [
+              {
+                path: ':serviceId',
+                Component: CreateBooking,
               },
             ],
           },

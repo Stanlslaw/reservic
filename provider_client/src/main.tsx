@@ -3,7 +3,7 @@ import './reset.css';
 
 import ReactDOM from 'react-dom/client';
 import { router } from './router.tsx';
-import '@telegram-apps/telegram-ui/dist/styles.css';
+import 'tmaui/dist/styles.css';
 import eruda from 'eruda';
 import {
   backButton,
@@ -21,7 +21,6 @@ viewport.mount();
 backButton.mount();
 viewport.expand();
 mainButton.mount();
-eruda.init();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <RouterProvider router={router} />,

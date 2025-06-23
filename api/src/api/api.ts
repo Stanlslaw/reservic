@@ -10,16 +10,113 @@
  * ---------------------------------------------------------------
  */
 
+export interface UserDto {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  phone_number?: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface CreateUserDto {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  phone_number?: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface UpdateUserDto {
+  id?: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  phone_number?: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface ServiceDto {
+  id: number;
+  providerId: number;
+  title: string;
+  photo_url: string[];
+  duration: number;
+  start_time: number;
+  end_time: number;
+  category: string;
+  days_of_week: string[];
+  description: string;
+  price: number;
+  status: "active" | "deleted" | "stopped";
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface UserFavoritesWithService {
+  /** @example 1 */
+  id: number;
+  /** @example 2 */
+  userId: number;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+  service: ServiceDto;
+}
+
 export interface CreateUserFavoriteDto {
   /** @example 5 */
   serviceId: number;
   /** @example 2 */
   userId: number;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
 }
 
 export interface DeleteUserFavoriteDto {
   /** @example 1 */
   id: number;
+}
+
+export interface CreateServiceReviewDto {
+  text: string;
+  value: number;
+  serviceId: number;
+  userId: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface ServiceReviewDto {
+  id: number;
+  text: string;
+  value: number;
+  serviceId: number;
+  userId: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
 }
 
 export interface ProviderDto {
@@ -37,9 +134,36 @@ export interface ProviderDto {
   picture_url?: string;
   /** @example "Experienced massage therapist" */
   description?: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface CreateProviderDto {
+  /** @example 1 */
+  id: number;
+  /** @example "John Doe" */
+  name?: string;
+  /** @example "johndoe" */
+  username: string;
+  /** @example "+1234567890" */
+  phone_number?: string;
+  /** @example "123 Main St" */
+  address?: string;
+  /** @example "https://example.com/photo.jpg" */
+  picture_url?: string;
+  /** @example "Experienced massage therapist" */
+  description?: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
 }
 
 export interface UpdateProviderDto {
+  /** @example 1 */
+  id?: number;
   /** @example "John Doe" */
   name?: string;
   /** @example "johndoe" */
@@ -52,6 +176,93 @@ export interface UpdateProviderDto {
   picture_url?: string;
   /** @example "Experienced massage therapist" */
   description?: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface ServiceWithProviderAndReviewsDto {
+  id: number;
+  title: string;
+  photo_url: string[];
+  duration: number;
+  start_time: number;
+  end_time: number;
+  category: string;
+  days_of_week: string[];
+  description: string;
+  price: number;
+  status: "active" | "deleted" | "stopped";
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+  provider: ProviderDto;
+  reviews: ServiceReviewDto[];
+  serviceReviewMark: number;
+}
+
+export interface DeleteServiceDto {
+  id: number;
+  providerId: number;
+}
+
+export interface BookingDto {
+  /** @example 1 */
+  id: number;
+  status: "active" | "declined";
+  /**
+   * Unix timestamp (seconds)
+   * @example 1717286400
+   */
+  appointment_date: number;
+  /** @example 5 */
+  serviceId: number;
+  /** @example 12 */
+  userId: number;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface GetBookingsDto {
+  bookings: string[];
+}
+
+export interface GetAvailableSlotsDto {
+  appointment_dates: string[];
+}
+
+export interface CreateBookingDto {
+  status: "active" | "declined";
+  /**
+   * Unix timestamp (seconds)
+   * @example 1717286400
+   */
+  appointment_date: number;
+  /** @example 5 */
+  serviceId: number;
+  /** @example 12 */
+  userId: number;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface UpdateBookingDto {
+  /** @example 1 */
+  id: number;
+  /**
+   * Unix timestamp (seconds)
+   * @example 1717286400
+   */
+  appointment_date: number;
+}
+
+export interface DeleteBookingDto {
   /** @example 1 */
   id: number;
 }
@@ -304,36 +515,65 @@ export class HttpClient<SecurityDataType = unknown> {
  * @title API Docs
  * @version 1.0
  * @contact
+ *
+ * Reservic bots api
  */
 export class Api<
   SecurityDataType extends unknown,
 > extends HttpClient<SecurityDataType> {
-  /**
-   * No description
-   *
-   * @tags App
-   * @name AppControllerGetHello
-   * @request GET:/
-   */
-  appControllerGetHello = (params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/`,
-      method: "GET",
-      ...params,
-    });
-
-  user = {
+  healthCheck = {
+    /**
+     * No description
+     *
+     * @tags App
+     * @name AppControllerTest
+     * @summary Check if app is healthy
+     * @request GET:/health-check
+     */
+    appControllerTest: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/health-check`,
+        method: "GET",
+        ...params,
+      }),
+  };
+  users = {
     /**
      * No description
      *
      * @tags Users
      * @name UsersControllerGetUser
-     * @request GET:/user/{id}
+     * @request GET:/users/{userId}
+     * @secure
      */
-    usersControllerGetUser: (id: number, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/user/${id}`,
+    usersControllerGetUser: (userId: number, params: RequestParams = {}) =>
+      this.request<UserDto, any>({
+        path: `/users/${userId}`,
         method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerCreateUser
+     * @request POST:/users/create
+     * @secure
+     */
+    usersControllerCreateUser: (
+      data: CreateUserDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserDto, any>({
+        path: `/users/create`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -342,81 +582,126 @@ export class Api<
      *
      * @tags Users
      * @name UsersControllerUpdateUser
-     * @request POST:/user/{id}/update
+     * @request POST:/users/update
+     * @secure
      */
-    usersControllerUpdateUser: (id: number, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/user/${id}/update`,
-        method: "POST",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
-     * @name UsersControllerGetFavorites
-     * @request GET:/user/{id}/favorites
-     */
-    usersControllerGetFavorites: (id: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/user/${id}/favorites`,
-        method: "GET",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
-     * @name UsersControllerAddFavorite
-     * @request POST:/user/{id}/favorites/add
-     */
-    usersControllerAddFavorite: (
-      id: number,
-      data: CreateUserFavoriteDto,
+    usersControllerUpdateUser: (
+      data: UpdateUserDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
-        path: `/user/${id}/favorites/add`,
+      this.request<UserDto, any>({
+        path: `/users/update`,
         method: "POST",
         body: data,
+        secure: true,
         type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Users
-     * @name UsersControllerRemoveFavorite
-     * @request POST:/user/{id}/favorites/remove
-     */
-    usersControllerRemoveFavorite: (
-      id: number,
-      data: DeleteUserFavoriteDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/user/${id}/favorites/remove`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
   };
-  providers = {
+  favorites = {
+    /**
+     * No description
+     *
+     * @tags Favorites
+     * @name FavoritesControllerGetFavorites
+     * @request GET:/favorites/{userId}
+     * @secure
+     */
+    favoritesControllerGetFavorites: (
+      userId: number,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserFavoritesWithService[], any>({
+        path: `/favorites/${userId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Favorites
+     * @name FavoritesControllerAddFavorite
+     * @request POST:/favorites/add
+     * @secure
+     */
+    favoritesControllerAddFavorite: (
+      data: CreateUserFavoriteDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserFavoritesWithService[], any>({
+        path: `/favorites/add`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Favorites
+     * @name FavoritesControllerRemoveFavorite
+     * @request POST:/favorites/delete
+     * @secure
+     */
+    favoritesControllerRemoveFavorite: (
+      data: DeleteUserFavoriteDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserFavoritesWithService[], any>({
+        path: `/favorites/delete`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+  };
+  reviews = {
+    /**
+     * No description
+     *
+     * @tags Reviews
+     * @name ReviewsControllerCreateServiceReview
+     * @request POST:/reviews/create
+     * @secure
+     */
+    reviewsControllerCreateServiceReview: (
+      data: CreateServiceReviewDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ServiceReviewDto, any>({
+        path: `/reviews/create`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+  };
+  provider = {
     /**
      * No description
      *
      * @tags Providers
      * @name ProvidersControllerGetProvider
-     * @request GET:/providers/{id}
+     * @request GET:/provider/{id}
+     * @secure
      */
     providersControllerGetProvider: (id: number, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/providers/${id}`,
+      this.request<ProviderDto, any>({
+        path: `/provider/${id}`,
         method: "GET",
+        secure: true,
+        format: "json",
         ...params,
       }),
 
@@ -425,17 +710,20 @@ export class Api<
      *
      * @tags Providers
      * @name ProvidersControllerCreateProvider
-     * @request POST:/providers/create
+     * @request POST:/provider/create
+     * @secure
      */
     providersControllerCreateProvider: (
-      data: ProviderDto,
+      data: CreateProviderDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
-        path: `/providers/create`,
+      this.request<CreateProviderDto, any>({
+        path: `/provider/create`,
         method: "POST",
         body: data,
+        secure: true,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -444,34 +732,273 @@ export class Api<
      *
      * @tags Providers
      * @name ProvidersControllerUpdateProvider
-     * @request POST:/providers/update
+     * @request POST:/provider/update
+     * @secure
      */
     providersControllerUpdateProvider: (
       data: UpdateProviderDto,
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
-        path: `/providers/update`,
+      this.request<ProviderDto, any>({
+        path: `/provider/update`,
         method: "POST",
         body: data,
+        secure: true,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+  };
+  services = {
+    /**
+     * No description
+     *
+     * @tags Services
+     * @name ServicesControllerGetServices
+     * @request GET:/services
+     * @secure
+     */
+    servicesControllerGetServices: (
+      query?: {
+        providerId?: number;
+        name?: string;
+        maxPrice?: number;
+        minPrice?: number;
+        category?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ServiceDto[], any>({
+        path: `/services`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
         ...params,
       }),
 
     /**
      * No description
      *
-     * @tags Providers
-     * @name ProvidersControllerGetProviderServices
-     * @request GET:/providers/services
+     * @tags Services
+     * @name ServicesControllerGetService
+     * @request GET:/services/{serviceId}
+     * @secure
      */
-    providersControllerGetProviderServices: (
-      id: number,
+    servicesControllerGetService: (
+      serviceId: number,
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
-        path: `/providers/services`,
+      this.request<ServiceWithProviderAndReviewsDto, any>({
+        path: `/services/${serviceId}`,
         method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Services
+     * @name ServicesControllerCreateService
+     * @request POST:/services/create
+     * @secure
+     */
+    servicesControllerCreateService: (params: RequestParams = {}) =>
+      this.request<ServiceDto, any>({
+        path: `/services/create`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Services
+     * @name ServicesControllerUpdateService
+     * @request POST:/services/update
+     * @secure
+     */
+    servicesControllerUpdateService: (params: RequestParams = {}) =>
+      this.request<ServiceDto, any>({
+        path: `/services/update`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Services
+     * @name ServicesControllerDeleteService
+     * @request POST:/services/delete
+     * @secure
+     */
+    servicesControllerDeleteService: (
+      data: DeleteServiceDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ServiceDto, any>({
+        path: `/services/delete`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+  };
+  bookings = {
+    /**
+     * No description
+     *
+     * @tags Bookings
+     * @name BookingsControllerGetBooking
+     * @request GET:/bookings/{bookingId}
+     * @secure
+     */
+    bookingsControllerGetBooking: (
+      bookingId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<BookingDto, any>({
+        path: `/bookings/${bookingId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Bookings
+     * @name BookingsControllerGetBookings
+     * @request GET:/bookings/bookings
+     * @secure
+     */
+    bookingsControllerGetBookings: (
+      query?: {
+        /**
+         * Фильтр по ID пользователя
+         * @example 1
+         */
+        userId?: any;
+        /**
+         * Фильтр по ID провайдера
+         * @example 2
+         */
+        providerId?: any;
+        /**
+         * Получить только последние бронирования
+         * @example true
+         */
+        isLast?: any;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetBookingsDto, any>({
+        path: `/bookings/bookings`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Bookings
+     * @name BookingsControllerGetAvailableSlots
+     * @request GET:/bookings/getAvailableSlots
+     * @secure
+     */
+    bookingsControllerGetAvailableSlots: (
+      query: {
+        serviceId: number;
+        /** @format date-time */
+        date: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetAvailableSlotsDto, any>({
+        path: `/bookings/getAvailableSlots`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Bookings
+     * @name BookingsControllerCreateBooking
+     * @request POST:/bookings/create
+     * @secure
+     */
+    bookingsControllerCreateBooking: (
+      data: CreateBookingDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<BookingDto, any>({
+        path: `/bookings/create`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Bookings
+     * @name BookingsControllerUpdateBooking
+     * @request POST:/bookings/update
+     * @secure
+     */
+    bookingsControllerUpdateBooking: (
+      data: UpdateBookingDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<BookingDto, any>({
+        path: `/bookings/update`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Bookings
+     * @name BookingsControllerDeleteBooking
+     * @request POST:/bookings/delete
+     * @secure
+     */
+    bookingsControllerDeleteBooking: (
+      data: DeleteBookingDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<BookingDto, any>({
+        path: `/bookings/delete`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
   };

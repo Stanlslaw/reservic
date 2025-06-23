@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
+import { ApiProperty, OmitType, PartialType, PickType } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString } from 'class-validator';
 import { Service } from 'src/services/service.entity';
 
@@ -34,7 +34,10 @@ export class Provider {
   @Column({ nullable: true })
   description?: string;
 
-  @OneToMany(() => Service, (service) => service.provider)
+  @OneToMany(() => Service, (service) => service.provider, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   services: Service[];
 
   @CreateDateColumn()
@@ -77,9 +80,19 @@ export class ProviderDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  createdAt?: Date;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  updatedAt?: Date;
 }
 
-export class CreateProviderDto extends OmitType(ProviderDto, ['id']) {}
+export class CreateProviderDto extends ProviderDto {}
+
+export class DeleteProviderDto extends PickType(ProviderDto, ['id'] as const) {}
 
 export class UpdateProviderDto extends PartialType(CreateProviderDto) {
   @ApiProperty({ example: 1 })

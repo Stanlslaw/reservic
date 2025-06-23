@@ -1,103 +1,30 @@
-import {
-  Body,
-  Controller,
-  Get,
-  InternalServerErrorException,
-  Param,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { UsersService } from './users.service';
-import { InitData } from '@telegram-apps/init-data-node';
-import { User } from './user.entity';
-import { FavoritesService } from 'src/favorites/favorites.service';
-import { ReviewsService } from 'src/reviews/reviews.service';
-import {
-  CreateUserFavoriteDto,
-  DeleteUserFavoriteDto,
-} from 'src/favorites/favorite.entity';
+import { CreateUserDto, UpdateUserDto, UserDto } from './user.entity';
 
-@Controller('user')
+import { ApiOkResponse, ApiSecurity } from '@nestjs/swagger';
+
+@ApiSecurity('tma-auth')
+@Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly favoriteService: FavoritesService,
-    private readonly reviewService: ReviewsService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  @Get(':id')
-  async getUser(@Req() req: { initData: InitData }, @Param('id') id: number) {
-    try {
-      const initData = req.initData;
-      const user = initData.user;
-
-      const isExist = await this.usersService.isExist(+id);
-
-      if (!isExist) {
-        await this.usersService.create(user);
-      }
-
-      if (isExist) {
-        await this.usersService.update(
-          this.usersService.tgUserToUserDto(user),
-          id,
-        );
-      }
-
-      const dbUser = await this.usersService.get(+id);
-      return { user: dbUser };
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
-    }
+  @ApiOkResponse({ type: UserDto })
+  @Get(':userId')
+  async getUser(@Param('userId') userId: number) {
+    return await this.usersService.getUser(+userId);
   }
 
-  @Post(':id/update')
-  async updateUser(@Body() user: Partial<User>, @Param('id') id: number) {
-    try {
-      const result = this.usersService.update(user, +id);
-      console.log(result);
-      return result;
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
-    }
+  @ApiOkResponse({ type: UserDto })
+  @Post('create')
+  async createUser(@Body() userData: CreateUserDto) {
+    return await this.usersService.createUser(userData);
   }
 
-  @Get(':id/favorites')
-  async getFavorites(@Param() id: number) {
-    try {
-      return this.favoriteService.getFavorites(+id);
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
-    }
-  }
-
-  @Post(':id/favorites/add')
-  async addFavorite(
-    @Param('id') id: number,
-    @Body() body: CreateUserFavoriteDto,
-  ) {
-    try {
-      return await this.favoriteService.addFavorite(+id, body.serviceId);
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
-    }
-  }
-
-  @Post(':id/favorites/remove')
-  async removeFavorite(
-    @Param('id') id: number,
-    @Body() body: DeleteUserFavoriteDto,
-  ) {
-    try {
-      return await this.favoriteService.removeFavorite(body.id);
-    } catch (err) {
-      console.log(err);
-      throw new InternalServerErrorException();
-    }
+  @ApiOkResponse({ type: UserDto })
+  @Post('update')
+  async updateUser(@Body() userData: UpdateUserDto) {
+    return await this.usersService.updateUser(userData);
   }
 }

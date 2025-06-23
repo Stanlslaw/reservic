@@ -1,93 +1,53 @@
-import {
-  Avatar,
-  Badge,
-  Caption,
-  Card,
-  Cell,
-  Divider,
-  IconButton,
-  Image,
-  Info,
-  Input,
-  List,
-  Tappable,
-} from '@telegram-apps/telegram-ui';
-import { useState } from 'react';
-import {
-  IoCloseOutline,
-  IoFilterOutline,
-  IoHeart,
-  IoHeartOutline,
-} from 'react-icons/io5';
+import { Cell, Image, List, Section, Tappable, Title } from 'tmaui';
+import { IoChevronForward } from 'react-icons/io5';
+import { formatMinutes } from '../../../utils/format';
+import { useNavigate } from 'react-router';
+import { useGetUserFavoritesQuery } from '../../../api/favoritesApi';
+import { initData, useSignal } from '@telegram-apps/sdk-react';
 
 export const Favorites = () => {
-  const [searchText, setSearchText] = useState<string>('');
+  const navigate = useNavigate();
+  const user = useSignal(initData.user);
+
+  const { data: favorites } = useGetUserFavoritesQuery(
+    { userId: user!.id },
+    { skip: !user?.id },
+  );
+
+  const goToService = (serviceId: number) => {
+    navigate(`/service/${serviceId}`);
+  };
 
   return (
     <List>
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          gap: 8,
-        }}
-      >
-        <div style={{ flexGrow: 1 }}>
-          <Input
-            placeholder="Поиск"
-            value={searchText}
-            onChange={e => setSearchText(e.target.value)}
-            after={
-              <Tappable
-                style={{ display: 'flex' }}
-                Component={'div'}
-                onClick={() => setSearchText('')}
-              >
-                <IoCloseOutline />
-              </Tappable>
-            }
-          />
-        </div>
-        <IconButton mode="outline" size="m">
-          <IoFilterOutline size={24} />
-        </IconButton>
-      </div>
-      <div></div>
-      <List>
-        <Card type="plain" style={{ width: '100%' }}>
-          <Cell
-            before={<Image size={48} />}
-            subhead={'Название услуги'}
-            subtitle={'описание'}
-            description={'Описание услуги'}
-            multiline
-            after={
-              <IconButton mode="outline" size="s">
-                <IoHeart size={16} />
-              </IconButton>
-            }
-          >
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <Caption>Цена:</Caption>
-              <Info type="text" subtitle="BYN">
-                500
-              </Info>
-            </div>
-          </Cell>
-          <Divider />
+      <Title>Любимые услуги</Title>
 
-          <Card.Cell
-            before={<Avatar size={28} />}
-            after={
-              <Badge type="number" mode="gray">
-                5.0
-              </Badge>
-            }
-          >
-            Провайдер услуги
-          </Card.Cell>
-        </Card>
-      </List>
+      <Section header={'Список любимых услуг'}>
+        {favorites
+          ?.map(favorites => favorites.service)
+          .map(service => {
+            return (
+              <Cell
+                style={{ padding: '12px' }}
+                before={
+                  <Image
+                    src={'https://api.reservic.ru/' + service?.photo_url}
+                    size={96}
+                  />
+                }
+                after={
+                  <Tappable onClick={() => goToService(service.id)}>
+                    <IoChevronForward size={32} />
+                  </Tappable>
+                }
+                subtitle={`${service.price} BYN ${formatMinutes(service.start_time)}-${formatMinutes(service.end_time)} ${service.duration} мин`}
+                description={service.description}
+              >
+                {service.title}
+              </Cell>
+            );
+          })}
+      </Section>
     </List>
   );
 };

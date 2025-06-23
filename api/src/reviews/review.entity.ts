@@ -41,9 +41,8 @@ export class ServiceReview {
 
 export class ServiceReviewDto {
   @ApiProperty()
-  @IsOptional()
   @IsInt()
-  id?: number;
+  id: number;
 
   @ApiProperty()
   @IsOptional()
@@ -51,19 +50,16 @@ export class ServiceReviewDto {
   text?: string;
 
   @ApiProperty()
-  @IsOptional()
   @IsInt()
-  value?: number;
+  value: number;
 
   @ApiProperty()
-  @IsOptional()
   @IsInt()
-  serviceId?: number;
+  serviceId: number;
 
   @ApiProperty()
-  @IsOptional()
   @IsInt()
-  userId?: number;
+  userId: number;
 
   @ApiProperty()
   @IsOptional()
@@ -74,4 +70,6 @@ export class ServiceReviewDto {
   updatedAt?: Date;
 }
 
-export class CreateReviewDto extends OmitType(ServiceReviewDto, ['id']) {}
+export class CreateServiceReviewDto extends OmitType(ServiceReviewDto, [
+  'id',
+]) {}

@@ -1,7 +1,7 @@
 import { initData } from '@telegram-apps/sdk-react';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from './baseQuery';
-import { ProviderDto } from './dto/provider';
+import { ProviderDto, CreateProviderDto, UpdateProviderDto } from './api';
 
 export const providersApi = createApi({
   reducerPath: 'providersApi',
@@ -9,22 +9,22 @@ export const providersApi = createApi({
   tagTypes: ['Provider'],
   endpoints: builder => ({
     getProvider: builder.query<ProviderDto, void>({
-      query: () => `/providers/${initData.user()?.id}`,
+      query: () => `/provider/${initData.user()?.id}`,
       providesTags: ['Provider'],
     }),
 
-    createProvider: builder.mutation<ProviderDto, ProviderDto | null>({
+    createProvider: builder.mutation<CreateProviderDto, ProviderDto>({
       query: providerData => ({
-        url: `/providers/create`,
+        url: `/provider/create`,
         method: 'POST',
         body: providerData,
       }),
       invalidatesTags: ['Provider'],
     }),
 
-    updateProvider: builder.mutation<ProviderDto, ProviderDto | null>({
+    updateProvider: builder.mutation<UpdateProviderDto, ProviderDto>({
       query: providerData => ({
-        url: `/providers/${initData.user()?.id}/update`,
+        url: `/provider/update`,
         method: 'POST',
         body: providerData,
       }),

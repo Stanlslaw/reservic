@@ -1,49 +1,36 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ProvidersService } from './providers.service';
-import { ProviderDto, UpdateProviderDto } from './provider.entity';
-@Controller('providers')
+import {
+  CreateProviderDto,
+  DeleteProviderDto,
+  ProviderDto,
+  UpdateProviderDto,
+} from './provider.entity';
+import { ApiOkResponse, ApiSecurity } from '@nestjs/swagger';
+import { ServiceDto } from 'src/services/service.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+
+@ApiSecurity('tma-auth')
+@UseGuards(AuthGuard)
+@Controller('provider')
 export class ProvidersController {
   constructor(private readonly providersService: ProvidersService) {}
 
+  @ApiOkResponse({ type: ProviderDto })
   @Get(':id')
-  async getProvider(@Param('id') id: number): Promise<ProviderDto> {
-    try {
-      return await this.providersService.getProvider(+id);
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
+  async getProvider(@Param('id') id: number) {
+    return await this.providersService.getProvider(+id);
   }
 
+  @ApiOkResponse({ type: CreateProviderDto })
   @Post('create')
-  async createProvider(
-    @Body() providerData: ProviderDto,
-  ): Promise<ProviderDto> {
-    try {
-      return await this.providersService.createProvider(providerData);
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
+  async createProvider(@Body() providerData: CreateProviderDto) {
+    return await this.providersService.createProvider(providerData);
   }
 
+  @ApiOkResponse({ type: ProviderDto })
   @Post('/update')
   async updateProvider(@Body() providerData: UpdateProviderDto) {
-    try {
-      return await this.providersService.updateProvider(providerData);
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  }
-
-  @Get('/services')
-  async getProviderServices(@Param('id') id: number) {
-    try {
-      return await this.providersService.getProviderServices(+id);
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
+    return await this.providersService.updateProvider(providerData);
   }
 }

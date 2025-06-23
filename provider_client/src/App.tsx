@@ -6,14 +6,20 @@ import { useEffect } from 'react';
 export const App = () => {
   const navigate = useNavigate();
 
-  const { data: providerData, isLoading } = useGetProviderQuery();
+  const {
+    data: providerData,
+    isLoading,
+    isError,
+    error,
+  } = useGetProviderQuery();
 
   useEffect(() => {
-    if (!isLoading && !providerData) {
+    console.log(error, isError, providerData);
+    if (!isLoading && isError && !providerData) {
       console.log(providerData);
       navigate('registration');
     }
-  }, [isLoading, navigate, providerData]);
+  }, [isLoading, isError, navigate, providerData]);
 
   return (
     <div

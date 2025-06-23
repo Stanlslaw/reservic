@@ -1,4 +1,4 @@
-import { Tabbar } from '@telegram-apps/telegram-ui';
+import { Tabbar } from 'tmaui';
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 
@@ -26,7 +26,7 @@ const TAB_BARS_ITEMS: TAB_BAR_ITEM[] = [
   {
     id: 'appointments',
     path: '/appointments',
-    text: 'Услуги',
+    text: 'Брони',
     Icon: MdOutlineBookmarks,
   },
   {
@@ -38,7 +38,7 @@ const TAB_BARS_ITEMS: TAB_BAR_ITEM[] = [
   {
     id: 'more',
     path: '/more',
-    text: 'Дополнительно',
+    text: 'Ещё',
     Icon: IoIosMenu,
   },
 ] as const;

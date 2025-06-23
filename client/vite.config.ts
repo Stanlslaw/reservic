@@ -22,5 +22,8 @@ export default defineConfig(({ mode }) => {
     css: {
       devSourcemap: true, // Для удобства разработки
     },
+    resolve: {
+      dedupe: ['react', 'react-dom'],
+    },
   };
 });

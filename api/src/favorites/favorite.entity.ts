@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../users/user.entity';
-import { Service } from 'src/services/service.entity';
-import { IsInt } from 'class-validator';
+import { Service, ServiceDto } from 'src/services/service.entity';
+import { IsInt, IsOptional } from 'class-validator';
 import { ApiProperty, OmitType, PickType } from '@nestjs/swagger';
 
 @Entity()
@@ -44,8 +44,23 @@ export class UserFavoriteDto {
   @ApiProperty({ example: 2 })
   @IsInt()
   userId: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  createdAt?: Date;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  updatedAt?: Date;
 }
 
 export class CreateUserFavoriteDto extends OmitType(UserFavoriteDto, ['id']) {}
 
 export class DeleteUserFavoriteDto extends PickType(UserFavoriteDto, ['id']) {}
+
+export class UserFavoritesWithService extends OmitType(UserFavoriteDto, [
+  'serviceId',
+]) {
+  @ApiProperty({ type: () => ServiceDto })
+  service: ServiceDto;
+}

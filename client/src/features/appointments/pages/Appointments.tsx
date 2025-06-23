@@ -1,21 +1,39 @@
 import {
+  Caption,
+  Cell,
   IconButton,
   Input,
   List,
+  Section,
   SegmentedControl,
   Tappable,
-} from '@telegram-apps/telegram-ui';
+  Title,
+} from 'tmaui';
+import dayjs from 'dayjs';
 import { useState } from 'react';
-import { IoCloseOutline, IoFilterOutline } from 'react-icons/io5';
+import { IoChevronForward } from 'react-icons/io5';
+import { useNavigate } from 'react-router';
+import { useGetBookingsQuery } from '../../../api/bookingsApi';
+import { initData, useSignal } from '@telegram-apps/sdk-react';
 
 export const Appointments = () => {
-  const [searchText, setSearchText] = useState<string>('');
   const [bookingMode, setBookingMode] = useState<'upcoming' | 'history'>(
     'upcoming',
   );
 
+  const user = useSignal(initData.user);
+
+  const { data: bookings } = useGetBookingsQuery({ userId: +user!.id });
+
+  const navigate = useNavigate();
+
+  const handleGoToBooking = (bookingId: number) => {
+    navigate(`/bookings/${bookingId}`);
+  };
+
   return (
     <List>
+      <Title>Список бронирований</Title>
       <SegmentedControl>
         <SegmentedControl.Item
           selected={bookingMode === 'upcoming'}
@@ -30,7 +48,32 @@ export const Appointments = () => {
           Прошлые
         </SegmentedControl.Item>
       </SegmentedControl>
-      <div
+      {bookingMode === 'upcoming' ? (
+        <Section>
+          {bookings && bookings.length ? (
+            bookings.map(booking => (
+              <Cell
+                multiline
+                after={
+                  <Tappable onClick={() => handleGoToBooking(booking.id)}>
+                    <IoChevronForward size={32} />
+                  </Tappable>
+                }
+                description={`${dayjs.unix(booking.appointment_date).format('DD.MM.YYYY HH:mm')}\n${booking.service.duration} мин\n25 BYN`}
+              >
+                {booking.service.title}
+              </Cell>
+            ))
+          ) : (
+            <Title style={{ textAlign: 'center', padding: '12px 0' }}>
+              Бронирования отсутствуют
+            </Title>
+          )}
+        </Section>
+      ) : (
+        <Section></Section>
+      )}
+      {/* <div
         style={{
           width: '100%',
           display: 'flex',
@@ -57,7 +100,7 @@ export const Appointments = () => {
           <IoFilterOutline size={24} />
         </IconButton>
       </div>
-      <div></div>
+      <div></div> */}
     </List>
   );
 };

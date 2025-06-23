@@ -1,4 +1,4 @@
-import { List } from '@telegram-apps/telegram-ui';
+import { List } from 'tmaui';
 
 export const History = () => {
   return <List>History</List>;

@@ -26,14 +26,17 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const authData = this.extractAuthDataFromHeader(request);
 
-    console.log(authData);
+    console.log(request.headers.authorization);
 
     if (!authData) {
       throw new UnauthorizedException();
     }
+
     try {
       const isBotTokenValid = isValid(authData, botToken);
       const isBotProviderTokenValid = isValid(authData, botProviderToken);
+
+      console.log(isBotProviderTokenValid);
       if (!(isBotProviderTokenValid || isBotTokenValid)) {
         throw new UnauthorizedException();
       }

@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateReviewDto, ServiceReview } from './review.entity';
+import { CreateServiceReviewDto, ServiceReview } from './review.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-export class ReviewsService {
+export class ServiceReviewsService {
   constructor(
     @InjectRepository(ServiceReview)
     private serviceReviewRepository: Repository<ServiceReview>,
   ) {}
 
-  async getReviews(serviceId: number) {
+  async getServiceReviews(serviceId: number) {
     return await this.serviceReviewRepository.find({
       where: {
         service: {
@@ -20,8 +20,18 @@ export class ReviewsService {
     });
   }
 
-  async createReview(userId: number, reviewData: CreateReviewDto) {
-    const { serviceId, ...rest } = reviewData;
+  async getUserReviews(serviceId: number) {
+    return await this.serviceReviewRepository.find({
+      where: {
+        service: {
+          id: serviceId,
+        },
+      },
+    });
+  }
+
+  async createReview(reviewData: CreateServiceReviewDto) {
+    const { serviceId, userId, ...rest } = reviewData;
 
     const review = this.serviceReviewRepository.create({
       ...rest,

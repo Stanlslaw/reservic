@@ -11,7 +11,7 @@ import { ServiceReview } from 'src/reviews/review.entity';
 
 import { Booking } from 'src/bookings/booking.entity';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { PartialType } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 @Entity()
 export class User {
@@ -36,7 +36,10 @@ export class User {
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];
 
-  @OneToMany(() => UserFavorite, (favorite) => favorite.user)
+  @OneToMany(() => UserFavorite, (favorite) => favorite.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   favorites: UserFavorite[];
 
   @OneToMany(() => ServiceReview, (serviceReviews) => serviceReviews.user)
@@ -50,32 +53,45 @@ export class User {
 }
 
 export class UserDto {
+  @ApiProperty()
   @IsInt()
   id: number;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   first_name?: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   last_name?: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   username?: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   photo_url?: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   phone_number?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  createdAt?: Date;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  updatedAt?: Date;
 }
 
 export class CreateUserDto extends UserDto {}
-
 export class UpdateUserDto extends PartialType(UserDto) {
   @IsInt()
   id: number;

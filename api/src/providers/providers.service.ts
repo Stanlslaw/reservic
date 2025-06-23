@@ -2,12 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   CreateProviderDto,
+  DeleteProviderDto,
   Provider,
-  ProviderDto,
   UpdateProviderDto,
 } from './provider.entity';
 import { Repository } from 'typeorm';
-import { Update } from 'telegraf/typings/core/types/typegram';
 
 @Injectable()
 export class ProvidersService {
@@ -17,11 +16,27 @@ export class ProvidersService {
   ) {}
 
   async getProvider(providerId: number) {
-    return await this.providerRepository.findOne({ where: { id: providerId } });
+    const provider = await this.providerRepository.findOne({
+      where: { id: providerId },
+    });
+
+    if (!provider) {
+      throw new NotFoundException('Provider not found');
+    }
+
+    return provider;
   }
 
   async createProvider(providerData: CreateProviderDto) {
-    return this.providerRepository.save(providerData);
+    const provider = this.providerRepository.create(providerData);
+    console.log(providerData);
+    return this.providerRepository.save(provider);
+  }
+
+  async deleteProvider(providerData: DeleteProviderDto) {
+    const provider = this.providerRepository.create(providerData);
+    console.log(providerData);
+    return this.providerRepository.save(provider);
   }
 
   async updateProvider(providerData: UpdateProviderDto) {

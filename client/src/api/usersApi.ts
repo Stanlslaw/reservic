@@ -1,6 +1,7 @@
 import { initData } from '@telegram-apps/sdk-react';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from './baseQuery';
+import { CreateUserDto, UpdateUserDto, UserDto } from './api';
 
 export const usersApi = createApi({
   reducerPath: 'usersApi',
@@ -8,13 +9,22 @@ export const usersApi = createApi({
   tagTypes: ['User'],
   endpoints: builder => ({
     getUser: builder.query<UserDto, void>({
-      query: () => `/user/${initData.user()?.id}`,
-      transformResponse: (res: { user: UserDto }) => res.user,
+      query: () => `/users/${initData.user()?.id}`,
       providesTags: ['User'],
     }),
-    updateUser: builder.mutation<UserDto, Partial<UserDto>>({
+
+    updateUser: builder.mutation<UserDto, UpdateUserDto>({
       query: userData => ({
-        url: `/user/${initData.user()?.id}/update`,
+        url: `/users/update`,
+        method: 'POST',
+        body: userData,
+      }),
+      invalidatesTags: ['User'],
+    }),
+
+    createUser: builder.mutation<UserDto, CreateUserDto>({
+      query: userData => ({
+        url: `/users/create`,
         method: 'POST',
         body: userData,
       }),
@@ -23,16 +33,5 @@ export const usersApi = createApi({
   }),
 });
 
-export const { useGetUserQuery, useUpdateUserMutation } = usersApi;
-
-export interface UserDto {
-  id: number;
-  tgId: number;
-  first_name: string;
-  last_name: string;
-  username?: string;
-  photo_url?: string;
-  phone_number?: string;
-  is_premium: boolean;
-  is_provider: boolean;
-}
+export const { useGetUserQuery, useCreateUserMutation, useUpdateUserMutation } =
+  usersApi;

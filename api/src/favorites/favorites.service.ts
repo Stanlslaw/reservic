@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-export class FavoritesService {
+export class UserFavoritesService {
   constructor(
     @InjectRepository(UserFavorite)
     private usersFavoriteRepository: Repository<UserFavorite>,
@@ -23,7 +23,7 @@ export class FavoritesService {
     });
   }
 
-  async addFavorite(userId: number, serviceId: number) {
+  async addToFavorite(userId: number, serviceId: number) {
     const existing = await this.usersFavoriteRepository.findOne({
       where: {
         user: { id: userId },
@@ -43,7 +43,7 @@ export class FavoritesService {
     return await this.usersFavoriteRepository.save(favorite);
   }
 
-  async removeFavorite(favoriteId: number) {
+  async deleteFromFavorite(favoriteId: number) {
     const favorite = await this.usersFavoriteRepository.findOne({
       where: {
         id: favoriteId,

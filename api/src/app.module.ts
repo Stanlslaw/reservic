@@ -12,7 +12,6 @@ import { ServicesModule } from './services/services.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { FavoritesModule } from './favorites/favorites.module';
-import { FavoritesService } from './favorites/favorites.service';
 
 @Module({
   imports: [
@@ -42,12 +41,6 @@ import { FavoritesService } from './favorites/favorites.service';
     FavoritesModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

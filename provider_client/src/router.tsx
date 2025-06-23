@@ -10,6 +10,8 @@ import { EditService } from './features/services/pages/EditService.tsx';
 import { Service } from './features/common/Service.tsx';
 import { CreateProviderProfile } from './features/providerProfile/pages/CreateProviderProfile.tsx';
 import { ErrorBoundary } from './features/error/pages/Error.tsx';
+import { Bookings } from './features/bookings/pages/Bookings.tsx';
+import { Booking } from './features/common/Booking.tsx';
 
 export const router = createBrowserRouter([
   {
@@ -40,11 +42,11 @@ export const router = createBrowserRouter([
                     Component: CreateService,
                   },
                   {
-                    path: 'edit',
+                    path: ':serviceId/update',
                     Component: EditService,
                   },
                   {
-                    path: 'service',
+                    path: ':serviceId',
                     Component: Service,
                   },
                 ],
@@ -52,10 +54,18 @@ export const router = createBrowserRouter([
             ],
           },
           {
-            path: 'appointments',
-            Component: null,
+            path: 'bookings',
+            children: [
+              {
+                index: true,
+                Component: Bookings,
+              },
+              {
+                Component: OutsideScreen,
+                children: [{ path: ':id', Component: Booking }],
+              },
+            ],
           },
-          { path: 'history', Component: null },
           {
             path: 'more',
 
